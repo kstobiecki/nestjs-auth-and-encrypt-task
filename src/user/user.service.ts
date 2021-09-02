@@ -1,8 +1,4 @@
-import {
-  Injectable,
-  Inject,
-  ConflictException,
-} from '@nestjs/common';
+import { Injectable, Inject, ConflictException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { USER_REPOSITORY } from './user.tokens';
 import { User } from './user.entity';
