@@ -2,7 +2,7 @@ import { Injectable, Inject, ConflictException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { USER_REPOSITORY } from './user.tokens';
 import { User } from './user.entity';
-import { CreateUserDto } from './dto';
+import { UserCredentialsDto } from './dto';
 import { ErrorMessageEnum } from '../enums';
 
 @Injectable()
@@ -12,7 +12,7 @@ export class UserService {
     private userRepository: Repository<User>,
   ) {}
 
-  async create(user: CreateUserDto): Promise<User> {
+  async create(user: UserCredentialsDto): Promise<User> {
     const isUserDuplicated: User = await this.userRepository.findOne({
       email: user.email,
     });
