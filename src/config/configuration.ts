@@ -3,5 +3,6 @@ export default () => ({
   auth: {
     secret: process.env.AUTH_SECRET,
     expiresIn: process.env.AUTH_JWT_EXPIRES_IN,
+    saltRounds: process.env.AUTH_SALT_ROUNDS,
   },
 });

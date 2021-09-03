@@ -4,12 +4,14 @@ import { USER_REPOSITORY } from './user.constants';
 import { User } from './user.entity';
 import { UserCredentialsDto, UserDto } from './dto';
 import { ErrorMessageEnum } from '../helpers/enums';
+import { HelpersService } from '../helpers/helpers.service';
 
 @Injectable()
 export class UserService {
   constructor(
     @Inject(USER_REPOSITORY)
     private userRepository: Repository<User>,
+    private helpersService: HelpersService,
   ) {}
 
   async findOne(opts: UserDto): Promise<User> {
@@ -30,6 +32,7 @@ export class UserService {
       });
     }
     Logger.debug({ message: '[create] insert user' });
+    user.password = await this.helpersService.passwordHash(user.password);
     return this.userRepository.save(user);
   }
 }

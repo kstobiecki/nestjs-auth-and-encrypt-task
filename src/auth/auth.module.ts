@@ -7,9 +7,11 @@ import { LocalStrategy } from './local.strategy';
 import { AuthController } from './auth.controller';
 import { UserModule } from '../user/user.module';
 import { ConfigService } from '@nestjs/config';
+import { HelpersModule } from '../helpers/helpers.module';
 
 @Module({
   imports: [
+    HelpersModule,
     PassportModule,
     UserModule,
     JwtModule.registerAsync({
