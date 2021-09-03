@@ -1,4 +1,11 @@
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  HttpCode,
+  HttpStatus,
+  Logger,
+  Post,
+} from '@nestjs/common';
 import { UserCredentialsDto, UserDto } from './dto';
 import { UserService } from './user.service';
 import { plainToClass } from 'class-transformer';
@@ -32,6 +39,7 @@ export class UserController {
   })
   @HttpCode(HttpStatus.CREATED)
   async createUser(@Body() user: UserCredentialsDto): Promise<UserDto> {
+    Logger.debug({ message: '[createUser] Requested to create an user' });
     const savedUser: User = await this.userService.create(user);
     return plainToClass(User, savedUser);
   }
