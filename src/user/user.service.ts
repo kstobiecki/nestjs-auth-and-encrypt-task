@@ -1,6 +1,6 @@
 import { Injectable, Inject, ConflictException, Logger } from '@nestjs/common';
 import { Repository } from 'typeorm';
-import { USER_REPOSITORY } from './user.tokens';
+import { USER_REPOSITORY } from './user.constants';
 import { User } from './user.entity';
 import { UserCredentialsDto, UserDto } from './dto';
 import { ErrorMessageEnum } from '../helpers/enums';
@@ -12,8 +12,8 @@ export class UserService {
     private userRepository: Repository<User>,
   ) {}
 
-  async find(opts: UserDto): Promise<User> {
-    Logger.debug({ message: `[find] find user by ${opts}` });
+  async findOne(opts: UserDto): Promise<User> {
+    Logger.debug({ message: `[findOne] find user by ${opts}` });
     return this.userRepository.findOne(opts);
   }
 

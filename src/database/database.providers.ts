@@ -1,5 +1,5 @@
 import { createConnection } from 'typeorm';
-import { DATABASE_CONNECTION } from './database.tokens';
+import { DATABASE_CONNECTION } from './database.constants';
 
 export const databaseProviders = [
   {
