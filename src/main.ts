@@ -7,9 +7,12 @@ import {
 } from '@nestjs/common';
 import { AllExceptionsFilter } from './helpers/filters';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  const configService = app.get(ConfigService);
+  const port = configService.get<number>('port');
   app.setGlobalPrefix('api');
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
@@ -23,8 +26,8 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
-  await app.listen(3000, () => {
-    Logger.log('App is listening on port 3000');
+  await app.listen(port, () => {
+    Logger.log(`App is listening on port ${port}`);
   });
 }
 bootstrap();
