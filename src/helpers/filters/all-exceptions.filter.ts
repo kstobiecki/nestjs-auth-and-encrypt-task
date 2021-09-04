@@ -28,8 +28,18 @@ export class AllExceptionsFilter implements ExceptionFilter {
         ? (exception.getResponse() as ErrorResponseInterface)
         : null;
 
-    const message = exceptionResponse ? exceptionResponse.message : exception;
-    const error = exceptionResponse ? exceptionResponse.error : null;
+    const exceptionMessage = exception.hasOwnProperty('message')
+      ? (exception as ErrorResponseInterface).message
+      : null;
+
+    const exceptionError = exception.hasOwnProperty('error')
+      ? (exception as ErrorResponseInterface).error
+      : exception;
+
+    const message = exceptionResponse
+      ? exceptionResponse.message
+      : exceptionMessage;
+    const error = exceptionResponse ? exceptionResponse.error : exceptionError;
 
     response.status(status).json({
       statusCode: status,
