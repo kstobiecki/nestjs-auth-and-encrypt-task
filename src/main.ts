@@ -21,6 +21,7 @@ async function bootstrap() {
     .setTitle('Leocode recruitment task')
     .setDescription('API for recruitment task')
     .setVersion('1.0')
+    .addBearerAuth()
     .addTag('Users')
     .addTag('Auth')
     .addTag('Encryption')

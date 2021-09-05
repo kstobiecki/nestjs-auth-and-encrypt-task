@@ -1,4 +1,10 @@
-import { Injectable, Inject, ConflictException, Logger } from '@nestjs/common';
+import {
+  Injectable,
+  Inject,
+  ConflictException,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { USER_REPOSITORY } from './user.constants';
 import { User } from './user.entity';
@@ -16,11 +22,18 @@ export class UserService {
 
   async findOne(opts: UserDto): Promise<User> {
     Logger.debug({ message: `[findOne] find user by ${opts}` });
-    return this.userRepository.findOne(opts);
+    const user = await this.userRepository.findOne(opts);
+    if (!user) {
+      Logger.debug({ message: `[findOne] user not found by ${opts}` });
+      throw new NotFoundException({
+        message: 'User not found',
+        error: ErrorMessageEnum.USER_NOT_FOUND,
+      });
+    }
+    return user;
   }
 
   async create(user: UserCredentialsDto): Promise<User> {
-    Logger.debug({ message: '[create] check if user exists' });
     const isUserDuplicated: User = await this.userRepository.findOne({
       email: user.email,
     });
@@ -34,5 +47,10 @@ export class UserService {
     Logger.debug({ message: '[create] insert user' });
     user.password = await this.helpersService.passwordHash(user.password);
     return this.userRepository.save(user);
+  }
+
+  async update(user: User): Promise<void> {
+    Logger.debug({ message: `[update] update user ${user}` });
+    await this.userRepository.save(user);
   }
 }

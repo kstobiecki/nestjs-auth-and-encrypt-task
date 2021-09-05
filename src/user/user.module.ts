@@ -9,6 +9,6 @@ import { HelpersModule } from '../helpers/helpers.module';
   imports: [DatabaseModule, HelpersModule],
   providers: [...userProviders, UserService],
   controllers: [UserController],
-  exports: [UserService],
+  exports: [UserService, ...userProviders],
 })
 export class UserModule {}

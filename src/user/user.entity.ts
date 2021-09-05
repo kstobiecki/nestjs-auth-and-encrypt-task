@@ -4,8 +4,11 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  JoinColumn,
+  OneToOne,
 } from 'typeorm';
 import { Exclude } from 'class-transformer';
+import { PubKey } from '../encryption/entity';
 
 @Entity()
 export class User {
@@ -27,4 +30,10 @@ export class User {
   @Column()
   @Exclude()
   password: string;
+
+  @OneToOne(() => PubKey, (pubKey) => pubKey.user, {
+    onDelete: 'SET NULL',
+  })
+  @JoinColumn()
+  pubKey: PubKey;
 }

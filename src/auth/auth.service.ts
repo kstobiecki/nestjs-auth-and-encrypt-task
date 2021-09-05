@@ -15,9 +15,10 @@ export class AuthService {
   async validateUser(email: string, pass: string): Promise<User> {
     Logger.debug({ message: `[validateUser] find user by email ${email}` });
     const user = await this.userService.findOne({ email });
-    const isMatch = user
-      ? await this.helpersService.passwordMatch(pass, user.password)
-      : false;
+    const isMatch = await this.helpersService.passwordMatch(
+      pass,
+      user.password,
+    );
     if (isMatch) {
       Logger.debug({ message: `[validateUser] return user ${user}` });
       return user;
