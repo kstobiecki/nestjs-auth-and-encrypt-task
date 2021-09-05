@@ -1,0 +1,1 @@
+export const PUB_KEY_REPOSITORY = 'PUB_KEY_REPOSITORY';
