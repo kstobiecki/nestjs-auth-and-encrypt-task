@@ -5,4 +5,7 @@ export default () => ({
     expiresIn: process.env.AUTH_JWT_EXPIRES_IN,
     saltRounds: process.env.AUTH_SALT_ROUNDS,
   },
+  encryption: {
+    passphrase: process.env.ENCRYPTION_PASSPHRASE,
+  },
 });
