@@ -6,8 +6,7 @@ import { PUB_KEY_REPOSITORY } from './encryption.constants';
 import { Repository } from 'typeorm';
 import { PubKey } from './entity';
 import { User } from '../user/user.entity';
-import { generateKeyPairSync } from 'crypto';
-import { ConfigService } from '@nestjs/config';
+import { HelpersService } from '../helpers/helpers.service';
 
 @Injectable()
 export class EncryptionService {
@@ -15,7 +14,7 @@ export class EncryptionService {
     @Inject(PUB_KEY_REPOSITORY)
     private pubKeyRepository: Repository<PubKey>,
     private userService: UserService,
-    private configService: ConfigService,
+    private helperService: HelpersService,
   ) {}
 
   private async save(pubKey: string, user: User): Promise<void> {
@@ -46,30 +45,9 @@ export class EncryptionService {
     });
   }
 
-  private generateKeyPairSync(): KeyPairDto {
-    Logger.debug({
-      message: `[generateKeyPairSync] return keyPair`,
-    });
-    const { publicKey, privateKey } = generateKeyPairSync('rsa', {
-      modulusLength: 4096,
-      publicKeyEncoding: {
-        type: 'spki',
-        format: 'pem',
-      },
-      privateKeyEncoding: {
-        type: 'pkcs8',
-        format: 'pem',
-        cipher: 'aes-256-cbc',
-        passphrase: this.configService.get<string>('encryption.passphrase'),
-      },
-    });
-
-    return { pubKey: publicKey, privKey: privateKey };
-  }
-
   async generateKeyPair(user: UserDto): Promise<KeyPairDto> {
     const userEntity: User = await this.userService.findOne(user);
-    const { pubKey, privKey } = this.generateKeyPairSync();
+    const { pubKey, privKey } = this.helperService.generateKeyPairSync();
     await this.deleteByUserId(userEntity.id);
     await this.save(pubKey, userEntity);
 
@@ -77,5 +55,11 @@ export class EncryptionService {
       message: `[generateKeyPair] return keyPair`,
     });
     return Promise.resolve({ pubKey, privKey });
+  }
+
+  async encrypt(file: Express.Multer.File, user: UserDto): Promise<string> {
+    const userEntity: User = await this.userService.findOne(user);
+    const { pubKey } = await this.findOneByUserId(userEntity.id);
+    return this.helperService.encrypt(file, pubKey);
   }
 }
